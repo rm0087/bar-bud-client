@@ -1,5 +1,5 @@
 ![alt text]([http://url/to/img.png](https://github.com/rm0087/bar-bud-client/blob/main/preview.png))
-![Alt text]((https://raw.githubusercontent.com/rm0087/bar-bud-client/refs/heads/main/preview.png) "a title")
+![Alt text](https://raw.githubusercontent.com/rm0087/bar-bud-client/refs/heads/main/preview.png "a title")
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
