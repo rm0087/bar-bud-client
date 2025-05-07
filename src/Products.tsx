@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
 import { useQuery, useLazyQuery, gql } from "@apollo/client";
 
+interface FlavorType {
+    id: number;
+    name: string;
+}
 
+interface AISummaryType {
+    id: number;
+    text: string;
+};
+
+interface ProductType {
+    id: number;
+    name: string;
+    ai_summaries: AISummaryType[];
+    flavors: FlavorType[];
+};
 
 const GET_ALL_PRODUCTS = gql`
     query GetAllProducts {
@@ -29,11 +44,11 @@ const GET_IMAGE = gql`
 }
 `
 
-export default function Products(){
+export default function Products(): React.ReactElement {
     const [products, setProducts] = useState<ProductType[]>([]);
 
     const { data, loading, error } = useQuery(GET_ALL_PRODUCTS, {
-        onCompleted: (data) => {
+        onCompleted: (data : { getAllProducts: ProductType[]}) => {
             if (data && data.getAllProducts) {
                 setProducts(data.getAllProducts);
             };
@@ -43,7 +58,7 @@ export default function Products(){
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>{error.message}</p>
-    if (!products || products && products.length < 1)return <p>No products to display!</p>
+    if (!products || products.length < 1)return <p>No products to display!</p>
     
     return (
         <div className="products-container">
@@ -54,10 +69,9 @@ export default function Products(){
     )
 };
 
-function Product({ product }: { product: ProductType }){
-    const [isAiExpanded, setIsAiExpanded] = useState(false);
-    const [productImage, setProductImage] = useState("");
-    const [flavors, setFlavors] = useState([]);
+function Product({ product }: { product: ProductType }): React.ReactElement {
+    const [isAiExpanded, setIsAiExpanded] = useState<boolean>(false);
+    const [productImage, setProductImage] = useState<string>("");
 
     const [getProductImage, { data, error, loading }] = useLazyQuery(GET_IMAGE, {
         onCompleted: (data)=>{
@@ -68,8 +82,7 @@ function Product({ product }: { product: ProductType }){
         }
     });
 
-
-    const handleImage = (promptId: number) => {
+    const handleImage = (promptId: number): void => {
         getProductImage({
             variables: {
                 promptId: promptId
@@ -87,13 +100,14 @@ function Product({ product }: { product: ProductType }){
     if (!product) return <li>Loading product...</li>;
     
    
-        const flavorElements = product.flavors?.map((flavor: FlavorType)=> (
-            <div className="flavor-button">   
-                <p className="flavor">{flavor.name}</p>
-            </div>
-        ))
+    const flavorElements: React.ReactElement[] = product.flavors?.map((flavor: FlavorType)=> (
+        <div key = {flavor.id} className="flavor-button">   
+            <p className="flavor">{flavor.name}</p>
+        </div>
+    ))
         
-    const summaryIndex: number =  Math.floor(Math.random() * (product.ai_summaries.length - 1));
+    const summaryIndex: number = product.ai_summaries.length > 0 ? 
+        Math.floor(Math.random() * product.ai_summaries.length) : 0;
     const productSummary: AISummaryType = product.ai_summaries[summaryIndex];
 
     return (
@@ -116,31 +130,14 @@ function Product({ product }: { product: ProductType }){
             <div>
                 {isAiExpanded ? 
                     <>
-                        <p onClick={()=>setIsAiExpanded(!isAiExpanded)}>Close Description</p>
+                        <p className = "description-close" onClick={()=>setIsAiExpanded(!isAiExpanded)}>close description</p>
                         <p className="product-description">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{productSummary.text}</p>
                     </> : 
                     <>
-                        <button onClick={()=>setIsAiExpanded(!isAiExpanded)}>Description</button>
+                        <button className="button-2" onClick={()=>setIsAiExpanded(!isAiExpanded)}>Description</button>
                     </>
                 }
             </div>
         </div>
     )
-};
-
-interface FlavorType {
-    id: number;
-    name: string;
-}
-
-interface AISummaryType {
-    id: number;
-    text: string;
-};
-
-interface ProductType {
-    id: number;
-    name: string;
-    ai_summaries: AISummaryType[];
-    flavors: FlavorType[];
 };

@@ -5,10 +5,13 @@ import './App.css'
 import Products from './Products'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
+      <div className='title-bar'>
+        <img className="hamburger" src="/ham.png"/>
+        <h3 className='title-text'>Beer-Bud .ai</h3>
+      </div>
       <Products/>
     </>
   )
