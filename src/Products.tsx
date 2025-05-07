@@ -12,6 +12,10 @@ const GET_ALL_PRODUCTS = gql`
                 id
                 text
             }
+            flavors {
+                id
+                name
+            }
         }
     }
 `;
@@ -53,6 +57,7 @@ export default function Products(){
 function Product({ product }: { product: ProductType }){
     const [isAiExpanded, setIsAiExpanded] = useState(false);
     const [productImage, setProductImage] = useState("");
+    const [flavors, setFlavors] = useState([]);
 
     const [getProductImage, { data, error, loading }] = useLazyQuery(GET_IMAGE, {
         onCompleted: (data)=>{
@@ -78,9 +83,16 @@ function Product({ product }: { product: ProductType }){
           return word.charAt(0).toUpperCase() + word.slice(1);
         }).join(' ');
       }
-
+    
     if (!product) return <li>Loading product...</li>;
-
+    
+   
+        const flavorElements = product.flavors?.map((flavor: FlavorType)=> (
+            <div className="flavor-button">   
+                <p className="flavor">{flavor.name}</p>
+            </div>
+        ))
+        
     const summaryIndex: number =  Math.floor(Math.random() * (product.ai_summaries.length - 1));
     const productSummary: AISummaryType = product.ai_summaries[summaryIndex];
 
@@ -89,11 +101,18 @@ function Product({ product }: { product: ProductType }){
             <div className="product-header">
                 <h3 className="product-title">{titleCase(product.name)}</h3>
             </div>
-            {!productImage ? 
-                loading ?  <img className="product-image" src="/loading.gif"/> : <button onClick={()=>handleImage(productSummary.id)}>Visualize</button>
-                : 
-                error ? <button onClick={()=>handleImage(productSummary.id)}>Try Again</button> : <img className="product-image" src={productImage} alt={product.name + " - " + productSummary.text}/>
-            }
+            <div>
+                <div className="product-flavors">
+                    {flavorElements}
+                </div>
+            </div>
+            <div className="product-buttons">
+                {!productImage ? 
+                    loading ?  <img className="product-image" src="/loading.gif"/> : <button onClick={()=>handleImage(productSummary.id)}>Visualize</button>
+                    : 
+                    error ? <button onClick={()=>handleImage(productSummary.id)}>Try Again</button> : <img className="product-image" src={productImage} alt={product.name + " - " + productSummary.text}/>
+                }
+            </div>
             <div>
                 {isAiExpanded ? 
                     <>
@@ -109,7 +128,10 @@ function Product({ product }: { product: ProductType }){
     )
 };
 
-
+interface FlavorType {
+    id: number;
+    name: string;
+}
 
 interface AISummaryType {
     id: number;
@@ -120,4 +142,5 @@ interface ProductType {
     id: number;
     name: string;
     ai_summaries: AISummaryType[];
+    flavors: FlavorType[];
 };

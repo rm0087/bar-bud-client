@@ -75,14 +75,14 @@ button:focus-visible {
 }
 
 .product {
-  background-color: #FDFAF6;
+  background-color: #FCEFCB;
   height: 100%;
   min-width: 90%;
   max-width: 90%;
   border-radius: 30px;
   border-width: 1px;
   margin-top: 25px;
-  box-shadow: 8px 10px 4px #00000050;
+  box-shadow: 5px 5px 5px #00000050;
 }
 
 .product-header {
@@ -114,6 +114,33 @@ button:focus-visible {
   font-weight: bold;
   padding: 10px;
   color: #000000;
+}
+
+.product-flavors {
+  display: flex;
+}
+
+.product-buttons {
+  margin-top: 20px;
+}
+
+.flavor {
+  margin: auto;
+  font-size: 75%;
+  color: #000000;
+  font-weight: bold;
+}
+
+.flavor-button{
+  margin: auto;
+  background-color: #ffffff;
+  border-radius: 25px;
+  padding: 4px;
+  /* min-height: px; */
+  min-width: 40px;
+  border-color:#000000;
+  /* border-style: solid; */
+  border-width: 1px;
 }
 
 
