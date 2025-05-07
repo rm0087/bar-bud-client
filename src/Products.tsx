@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, useLazyQuery, gql } from "@apollo/client";
 
 interface FlavorType {
@@ -47,7 +47,7 @@ const GET_IMAGE = gql`
 export default function Products(): React.ReactElement {
     const [products, setProducts] = useState<ProductType[]>([]);
 
-    const { data, loading, error } = useQuery(GET_ALL_PRODUCTS, {
+    const { loading, error } = useQuery(GET_ALL_PRODUCTS, {
         onCompleted: (data : { getAllProducts: ProductType[]}) => {
             if (data && data.getAllProducts) {
                 setProducts(data.getAllProducts);
@@ -73,7 +73,7 @@ function Product({ product }: { product: ProductType }): React.ReactElement {
     const [isAiExpanded, setIsAiExpanded] = useState<boolean>(false);
     const [productImage, setProductImage] = useState<string>("");
 
-    const [getProductImage, { data, error, loading }] = useLazyQuery(GET_IMAGE, {
+    const [getProductImage, { error, loading }] = useLazyQuery(GET_IMAGE, {
         onCompleted: (data)=>{
             if (data && data.getProductImage){
                 const image: string = `${data.getProductImage.image}`
