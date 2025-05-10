@@ -12,11 +12,13 @@
 }
 
 div#root{
-  /* margin:auto; */
+  margin:0;
   padding:0;
   /* place-items: center; */
   width: 100%;
+  /* display: flex; */
 }
+
 
 a {
   font-weight: 500;
@@ -34,7 +36,8 @@ html {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  /* place-items: center; */
+  justify-content: center;
   min-width: 320px;
   min-height: 100%;
   padding: 0 0 30px 0;
@@ -58,6 +61,7 @@ button {
   transition: border-color 0.25s;
   margin:10px;
   font-family: "Cal Sans";
+  max-width: fit-content;
 }
 
 .button-2 {
@@ -80,6 +84,11 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+
+/* .title-container {
+  
+} */
 
 .title-bar {
   background-color: #4F1C51;
@@ -104,53 +113,111 @@ button:focus-visible {
 .hamburger {
   height: 24px;
   width: 24px;
+  cursor: pointer;
+}
+
+#add-beer {
+  margin: 10px;
 }
 
 .products-container {
+  /* For mobile */
   width: 100%;
-  margin-top: 48px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content: center;
+}
+@media screen and (min-width: 768px) {
+  /* For desktops */
+  .products-container {
+    flex-direction: row;
+    align-items:start;
+  }
 }
 
 .product {
+  /* For mobile */
   background-color: #FAD59A;
   height: 100%;
   min-width: 90%;
   max-width: 90%;
+  min-height: 245px;
   border-radius: 30px;
   border-width: 1px;
   margin-top: 25px;
   box-shadow: 0px 5px 10px #00000050;
 }
+@media screen and (min-width: 768px) {
+  /* For desktops */
+  .product {
+    /* width: 10px; */
+    min-width: 20%;
+    max-width: 20%;
+    margin: 25px 30px 25px 30px;
+  }
+}
 
 .product-header {
+  /* max-height:10px; */
   width: 100%;
   /* background-color: #FDFAF6; */
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  min-height: 8vh;
+  /* min-height: 8vh; */
   align-content: center;
+  display:flex;
+  flex-direction: row;
+  padding: 10px 10px 0 20px;
+  /* overflow-wrap: initial; */
 }
 
 .product-image{
   width: 256px;
   height: 256px;
   border-radius: 8px;
+  margin-top: 10px;
+}
+@media screen and (min-width: 768px) {
+  /* For desktops */
+  .product-image {
+    border-radius: 0px;
+  }
 }
 
 .product-title{
   text-align: center;
   font-family: "Cal Sans";
   font-size: x-large;
-  margin:0;
+  margin:0 0 0 10px;
   color: #131010;
+  padding: 0px 20px 0 0px;
+  text-align: left;
+  
+}
+@media screen and (min-width: 768px) {
+  /* For desktops */
+  .product-title {
+    font-size: larger;
+  }
+}
+
+.product-flag {
+  font-size: large;
+  padding-top: 6px;
+}
+@media screen and (min-width: 768px) {
+  /* For desktops */
+  .product-flag {
+    font-size: small;
+  }
 }
 
 .product-description {
   text-align: start;
-  font-size: small;
+  font-size: 12px;
   font-weight: bold;
   padding: 0px 10px 10px 10px;
   color: #000000;
@@ -173,12 +240,28 @@ button:focus-visible {
 .product-flavors {
   display: flex;
   justify-content: center;
+  align-items: start;
   flex-wrap: wrap;
+  min-height: 40px;
+  margin-top: 5px;
   
 }
 
 .product-buttons {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+.product-foodPairings {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.description-container {
+  margin-top: 25px;
 }
 
 .flavor-button{
@@ -198,6 +281,29 @@ button:focus-visible {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+.foodPairing-button{
+  margin: 5px;
+  background-color: #A86523;
+  border-radius: 25px;
+  padding: 4px;
+  min-height: 10px;
+  max-height: 10px;
+  /* min-width: 40px; */
+  /* max-width: ; */
+  border-color:#000000;
+  /* border-style: solid; */
+  border-width: 1px;
+  /* display: flex; */
+  /* box-shadow: 1px 1px 5px #000000; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: small;
 }
 
 .flavor {

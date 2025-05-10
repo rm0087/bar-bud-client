@@ -1,7 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useLazyQuery, gql } from "@apollo/client";
 
 interface FlavorType {
+    id: number;
+    name: string;
+}
+
+interface FoodPairingType {
     id: number;
     name: string;
 }
@@ -16,6 +21,7 @@ interface ProductType {
     name: string;
     ai_summaries: AISummaryType[];
     flavors: FlavorType[];
+    food_pairings: FoodPairingType[];
 };
 
 const GET_ALL_PRODUCTS = gql`
@@ -31,6 +37,10 @@ const GET_ALL_PRODUCTS = gql`
                 id
                 name
             }
+            food_pairings {
+                id
+                name
+            }
         }
     }
 `;
@@ -43,6 +53,7 @@ const GET_IMAGE = gql`
     }
 }
 `
+
 
 export default function Products(): React.ReactElement {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -69,6 +80,12 @@ export default function Products(): React.ReactElement {
     )
 };
 
+
+
+
+
+
+// Individual product component
 function Product({ product }: { product: ProductType }): React.ReactElement {
     const [isAiExpanded, setIsAiExpanded] = useState<boolean>(false);
     const [productImage, setProductImage] = useState<string>("");
@@ -95,29 +112,36 @@ function Product({ product }: { product: ProductType }): React.ReactElement {
         return str.toLowerCase().split(' ').map(function(word) {
           return word.charAt(0).toUpperCase() + word.slice(1);
         }).join(' ');
-      }
+    }
     
     if (!product) return <li>Loading product...</li>;
     
    
-    const flavorElements: React.ReactElement[] = product.flavors?.map((flavor: FlavorType)=> (
+    const flavorElements: React.ReactElement[] = product.flavors?.map((flavor: FlavorType): React.ReactElement => (
         <div key = {flavor.id} className="flavor-button">   
             <p className="flavor">{flavor.name}</p>
         </div>
     ))
-        
-    const summaryIndex: number = product.ai_summaries.length > 0 ? 
-        Math.floor(Math.random() * product.ai_summaries.length) : 0;
-    const productSummary: AISummaryType = product.ai_summaries[summaryIndex];
+    
+    const flavorPairings: React.ReactElement[] = product.food_pairings?.map((foodPairing: FoodPairingType): React.ReactElement => (
+        <div key = {foodPairing.id} className="foodPairing-button">   
+            <p className="foodPairing-button">{foodPairing.name}</p>
+        </div>
+    ))
+
+    // const summaryIndex: number = product.ai_summaries.length > 0 ? 
+    //     Math.floor(Math.random() * product.ai_summaries.length) : 0;
+    const productSummary: AISummaryType = product.ai_summaries[product.ai_summaries.length - 1];
 
     return (
         <div className="product" key = {product.id}>
             <div className="product-header">
-                <h3 className="product-title">{titleCase(product.name)}</h3>
+                <span className="product-flag">🇺🇸</span>
+                <h3 className="product-title"> {titleCase(product.name)}</h3>
             </div>
             <div>
                 <div className="product-flavors">
-                    {flavorElements}
+                    {flavorElements.slice(0,5)}
                 </div>
             </div>
             <div className="product-buttons">
@@ -126,16 +150,21 @@ function Product({ product }: { product: ProductType }): React.ReactElement {
                     : 
                     error ? <button onClick={()=>handleImage(productSummary.id)}>Try Again</button> : <img className="product-image" src={productImage} alt={product.name + " - " + productSummary.text}/>
                 }
+                {!isAiExpanded ?
+                    <button className="button-2" onClick={()=>setIsAiExpanded(!isAiExpanded)}>Description</button> :
+                    <p className = "description-close" onClick={()=>setIsAiExpanded(!isAiExpanded)}>close description</p>
+                }
             </div>
             <div>
-                {isAiExpanded ? 
+                {isAiExpanded && 
                     <>
-                        <p className = "description-close" onClick={()=>setIsAiExpanded(!isAiExpanded)}>close description</p>
-                        <p className="product-description">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{productSummary.text}</p>
-                    </> : 
-                    <>
-                        <button className="button-2" onClick={()=>setIsAiExpanded(!isAiExpanded)}>Description</button>
-                    </>
+                        <div className="product-foodPairings">
+                            {flavorPairings.slice(0,5)}
+                        </div>
+                        <div className="description-container">
+                            <p className="product-description">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{productSummary.text}</p>
+                        </div>
+                    </> 
                 }
             </div>
         </div>
